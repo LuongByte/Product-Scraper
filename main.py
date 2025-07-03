@@ -1,7 +1,7 @@
 from gui import App
-from tkinter import Tk
+from ttkbootstrap import Window
 
 if __name__ == "__main__":
-    base = Tk()  
+    base = Window(themename="darkly")  
     app = App(base)
     base.mainloop()

@@ -112,9 +112,6 @@ def search_items(product):
     for product in products:
         product_list.append(product)
 
-    for product in products:
-            product_list.append(product)
-
     product_dict = {"title" : [], "price" : [], "rating" : [], "reviews" : [], "link" : []}
 
     for product in product_list:
