@@ -1,7 +1,7 @@
 import ttkbootstrap as tb
 import webbrowser
 from tkinter import *
-from scraper import search_items, open_file
+from scraper import search_items, sort_price, combine_search
 
 
 class App:
@@ -29,9 +29,24 @@ class App:
         self.title_list = Listbox(base, font=('Arial', 15), background='white', height=15, width=75)
         self.entry = Entry(self.search_frame, bg='white', fg='black', font=('Arial', 30))
         self.button = Button(self.search_frame, text="Search", cursor='hand2', font=('Arial', 30), 
-                             command=lambda: search(self.entry.get(), self.title_list))
+                             command=lambda: search(self.entry.get(), self.title_list, self.websites, self.web_list))
 
-    
+        file = open('websites.txt', 'r')
+        self.websites = file.readlines()
+        file.close()
+
+        self.web_list = []
+
+        for i in range(len(self.websites)):
+            website = self.websites[i].split(';')[0]
+            self.web_list.append(BooleanVar())
+            self.web_list[i].set(True)
+            new_check = tb.Checkbutton(self.sidebar, variable=self.web_list[i], onvalue=True, offvalue=False, text=website, style="Custom.TCheckbutton")
+            new_check.pack(anchor='w', padx=15, pady=10)
+            if i == 0:
+                new_check.pack_configure(pady=(150, 10))
+
+
         def show_options(list, df):
             list.delete(0, END)
             max = len((str(df.iloc[len(df) - 1]['price'])).split('.')[0])
@@ -47,12 +62,19 @@ class App:
                     aft = aft + '0'
                 list.insert(list.size(), '    $' + bef + '.' + aft + '    ' + '|' + '    ' + df.iloc[i]['title'])
 
-        def search(input, list):
-            if(input == ""):
+        def search(user_input, listbox, websites, web_check):
+            if(user_input == ""):
                 return
-            search_items(input)
-            df = open_file('test.csv')
-            show_options(list, df)
+            results = []
+            for i in range(len(websites)):
+                if web_check[i].get() == True:
+                    result = search_items(user_input, websites[i].split(';'))
+                    results.append(result)
+                    
+            combined_df = combine_search(results)
+            #combined_df.sort_values(by='price', inplace=True)
+            sort_price(combined_df, 0, len(combined_df) - 1) #For Practice
+            show_options(listbox, combined_df)
 
         def on_enter(button2):
             button2.config(relief="sunken")

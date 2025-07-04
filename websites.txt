@@ -1,2 +1,2 @@
 Amazon;https://www.amazon.ca/s?k=;a-section a-spacing-small puis-padding-left-small puis-padding-right-small;a-size-base-plus a-spacing-none a-color-base a-text-normal;a-price,a-offscreen;a-icon-alt;a-size-base s-underline-text;https://amazon.ca,a-link-normal s-line-clamp-4 s-link-style a-text-normal
-CanadaComputers;https://www.canadacomputers.com/en/search?s=;product-description;h3 product-title mb-1;price no-sale-price;col-md-12 align-self-center review-icon,data-score;star-number;
+CanadaComputers;https://www.canadacomputers.com/en/search?s=;product-description;h3 product-title mb-1;price no-sale-price;col-md-12 align-self-center review-icon,data-score;star-number;,
