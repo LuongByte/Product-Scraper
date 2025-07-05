@@ -22,7 +22,7 @@ class App:
         style.configure('Custom.TLabel', background="#303030", font=("Arial", 20))
         style.configure('Custom.TCheckbutton', background="#303030", font=("Arial", 20))
         
-        self.label = Label(base, text='Deal Finder', font=('Arial', 40), relief='raised', bd='5', compound='top', image=self.test_img)
+        self.label = Label(base, text='Parts Finder', font=('Arial', 40), relief='raised', bd='5', compound='top', image=self.test_img)
         self.search_frame = Frame(base)
         self.sidebar = tb.Frame(base, style="Custom.TLabel", width=300)
         self.bars = tb.Label(self.base, image=self.sideicon, cursor='hand2')

@@ -1,12 +1,13 @@
+import re
+import requests
 import pandas as pd
 import numpy as np
-import requests
 from bs4 import BeautifulSoup
 
 #Product detail extraction
 def get_title(product, attribute):
     try:
-        title = product.find('h2', attrs = {'class' : attribute}).text.strip()
+        title = product.find(attrs = {'class' : attribute}).text.strip()
     except AttributeError:
         return np.nan
     
@@ -17,13 +18,12 @@ def get_price(product, attribute):
         if len(attribute.split(',')) != 1:
             price = product.find('span', attrs = {'class' : attribute.split(',')[0]}).find('span', attrs = {'class' : attribute.split(',')[1]}).text.strip()
         else:
-            price = product.find('span', attrs = {'class' : attribute}).text.strip()
+            price = product.find(attrs = {'class' : attribute}).text.strip()
 
     except AttributeError:
         return np.nan
     
-    price = price.replace('$', '')
-    price = price.replace(',', '')
+    price = price.replace('$', '').replace(',', '').replace(' –', '')
     price = float(price)
     return price
 
@@ -33,7 +33,8 @@ def get_rating(product, attribute):
             score = product.find(attrs = {'class' : attribute.split(',')[0]}).get(attribute.split(',')[1])
         else:
             score = product.find('span', attrs = {'class' : attribute}).text.strip()
-        score = float(score.split()[0])
+        num = re.findall(r"\d+\.?\d*", score)
+        score = float(num[0])
     except AttributeError:
         return "N/A"
     
