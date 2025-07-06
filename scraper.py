@@ -102,7 +102,7 @@ def merge(data, l, mid, r):
 
 
 def search_items(product, website_info):
-    URL = website_info[1] + product
+    URL = website_info[1].split(',')[0] + product + website_info[1].split(',')[1]
     HEADERS = ({'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0', 'Accept-Language': 'en-US, en; q=0.5'})
     
     webpage = requests.get(URL, headers = HEADERS)
