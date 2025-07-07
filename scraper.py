@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from bs4 import BeautifulSoup
 
-#Product detail extraction
+#Extracts various product details
 def get_title(product, attribute):
     try:
         title = product.find(attrs = {'class' : attribute}).text.strip()
@@ -56,6 +56,8 @@ def get_link(product, attribute):
     
     return link
 
+
+#Sorting products
 def sort_price(data, l, r):
     if(l >= r):
         return
@@ -101,6 +103,7 @@ def merge(data, l, mid, r):
         k += 1
 
 
+#Searches and scrapes product data from given website
 def search_items(product, website_info):
     URL = website_info[1].split(',')[0] + product + website_info[1].split(',')[1]
     HEADERS = ({'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0', 'Accept-Language': 'en-US, en; q=0.5'})
@@ -129,11 +132,13 @@ def search_items(product, website_info):
     df = df.dropna(subset=['price'])
     return df
 
-def open_file(fileName):
-    df = pd.read_csv(fileName)
-    return df
 
+#Combines data from multiple website searches
 def combine_search(df_list):
     combined_df = pd.concat(df_list, ignore_index=True)
     combined_df.to_csv('test.csv', header=True, index=False)
     return combined_df
+
+def open_file(fileName):
+    df = pd.read_csv(fileName)
+    return df
