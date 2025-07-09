@@ -152,7 +152,8 @@ class App:
                     results.append(result)
                     loading['value'] += 60/len(websites)
                     self.base.update()
-            
+            if loading['value'] != 60:
+                loading['value'] += 60 - loading['value']
             if len(results) == 0:
                 messagebox.showwarning(title='Select Website', message='Please select at least one website!')
                 return
