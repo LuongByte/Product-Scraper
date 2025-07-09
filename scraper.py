@@ -23,8 +23,8 @@ def get_price(product, attribute):
     except AttributeError:
         return np.nan
     
-    price = re.findall(r"\d+\.?\d*", price)
-    price = float(price[0])
+    price = price.replace('$', '').replace(',', '').replace(' –', '')
+    price = float(price)
     return price
 
 def get_rating(product, attribute):
@@ -33,19 +33,20 @@ def get_rating(product, attribute):
             score = product.find(attrs = {'class' : attribute.split(',')[0]}).get(attribute.split(',')[1])
         else:
             score = product.find('span', attrs = {'class' : attribute}).text.strip()
-        num = re.findall(r"\d+\.?\d*", score)
-        score = float(num[0])
     except AttributeError:
-        return "N/A"
+        return 0
     
+    num = re.findall(r"\d+\.?\d*", score)
+    score = float(int(float(num[0]) * 100)/100)
     return score
 
 def get_reviews(product, attribute):
     try:
         reviews = product.find('span', attrs = {'class' : attribute}).text.strip()
     except AttributeError:
-        return "N/A"
+        return 0
     reviews = reviews.replace(',', '').replace('(', '').replace(')', '')
+    reviews = int(reviews)
     return reviews
 
 def get_link(product, attribute):
@@ -57,17 +58,17 @@ def get_link(product, attribute):
     return link
 
 
-#Sorting products
-def sort_price(data, l, r):
+#Sorting products based on provided column with mergesort
+def sort_data(data, l, r, selected, check):
     if(l >= r):
         return
     
     mid = (l + r)//2
-    sort_price(data, l, mid)
-    sort_price(data, mid + 1, r)
-    merge(data, l, mid, r)
+    sort_data(data, l, mid, selected, check)
+    sort_data(data, mid + 1, r, selected, check)
+    merge(data, l, mid, r, selected, check)
 
-def merge(data, l, mid, r):
+def merge(data, l, mid, r, selected, check):
     n1 = mid - l + 1
     n2 = r - mid
 
@@ -85,7 +86,7 @@ def merge(data, l, mid, r):
     j = 0
     k = l
     while i < n1 and j < n2:
-        if left_list.iloc[i]['price'] <= right_list.iloc[j]['price']:
+        if (left_list.iloc[i][selected] * check) <= (right_list.iloc[j][selected] * check):
             data.iloc[k] = left_list.iloc[i]
             i += 1
         else:
@@ -139,6 +140,12 @@ def combine_search(df_list):
     combined_df.to_csv('test.csv', header=True, index=False)
     return combined_df
 
+def test(df):
+    df.to_csv('check.csv', header=True, index=False)
+
 def open_file(fileName):
     df = pd.read_csv(fileName)
     return df
+
+def copy_data(df):
+    return df.copy(deep=True)
