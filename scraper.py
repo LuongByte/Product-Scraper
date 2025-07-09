@@ -23,8 +23,8 @@ def get_price(product, attribute):
     except AttributeError:
         return np.nan
     
-    price = price.replace('$', '').replace(',', '').replace(' –', '')
-    price = float(price)
+    price = re.findall(r"\d+\.?\d*", price)
+    price = float(price[0])
     return price
 
 def get_rating(product, attribute):
