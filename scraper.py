@@ -23,8 +23,9 @@ def get_price(product, attribute):
     except AttributeError:
         return np.nan
     
-    price = price.replace('$', '').replace(',', '').replace(' –', '')
-    price = float(price)
+    price = price.replace(',', '')
+    price = re.findall(r"\d+\.?\d*", price)
+    price = float(price[0])
     return price
 
 def get_rating(product, attribute):
@@ -137,15 +138,7 @@ def search_items(product, website_info):
 #Combines data from multiple website searches
 def combine_search(df_list):
     combined_df = pd.concat(df_list, ignore_index=True)
-    combined_df.to_csv('test.csv', header=True, index=False)
     return combined_df
-
-def test(df):
-    df.to_csv('check.csv', header=True, index=False)
-
-def open_file(fileName):
-    df = pd.read_csv(fileName)
-    return df
 
 def copy_data(df):
     return df.copy(deep=True)

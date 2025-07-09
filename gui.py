@@ -1,25 +1,31 @@
-import ttkbootstrap as tb
+import os
+import sys
 import webbrowser
+import ttkbootstrap as tb
 from tkinter import *
 from tkinter.ttk import Progressbar
 from tkinter import messagebox
-from scraper import search_items, sort_data, combine_search, copy_data, test
+from scraper import search_items, sort_data, combine_search, copy_data
 
 
 class App:
     def __init__(self, base):
+        #For file access when turning into exe file
+        path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+
         #Window Setup
         self.base = base
         self.base.geometry('1920x1080')
         self.base.minsize(640, 360)
         self.base.state('zoomed')
         self.base.title('Product Scraper')
+        self.base.iconbitmap(os.path.join(path, 'logo.ico'))
 
         #Universal Variables
-        self.logo = PhotoImage(file='images/logo.png').subsample(4, 4)
-        self.sideicon = PhotoImage(file="images/drawing.png").subsample(10,10)
-        self.arrow = PhotoImage(file='images/arrow.png').subsample(5, 5)
-        file = open('websites.txt', 'r')
+        self.logo = PhotoImage(file=os.path.join(path, 'images', 'logo.png')).subsample(4, 4)
+        self.sideicon = PhotoImage(file=os.path.join(path, 'images', 'drawing.png')).subsample(10, 10)
+        self.arrow = PhotoImage(file=os.path.join(path, 'images', 'arrow.png')).subsample(5, 5)
+        file = open(os.path.join(path, 'websites.txt'), 'r')
         self.websites = file.readlines()
         file.close()
         self.links = []
@@ -91,8 +97,9 @@ class App:
                 max = len(max)
                 col = self.sort_select.get().lower()
             else:
-                max = len((str(df.iloc[len(df) - 1][self.sort_options[2].lower()])).split('.')[0])
-                col = self.sort_options[2].lower()
+                for i in range(len(df)):
+                    list.insert(list.size(), '    ' + df.iloc[i]['title'])
+                return
             for i in range(len(df)):
                 if self.sort_select.get() == self.sort_options[3]:
                     symbol = '✰'
