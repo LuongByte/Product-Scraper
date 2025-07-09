@@ -58,7 +58,7 @@ class App:
         self.search_button = tb.Button(self.search_frame, text="Search", cursor='hand2', style='Normal.TButton', takefocus=0, 
                              command=lambda: search(self.entry.get(), self.product_list, self.websites, self.loading, self.search_button))
         self.open_button = tb.Button(self.base, image=self.arrow, cursor='hand2', style='Normal.TButton', takefocus=0, 
-                                     command=lambda: open_links(self.links, self.product_list.curselection()))
+                                     command=lambda: open_links(self.product_list.curselection()))
         self.switch_button = tb.Button(self.base, text='Multi', cursor='hand2', style='Normal.TButton', takefocus=0, 
                                        command=lambda: toggle_muliple(self.switch_button, self.product_list))
         self.sort_by = tb.OptionMenu(self.base, self.sort_select, *self.sort_options, style='Custom.TMenubutton')
@@ -99,6 +99,7 @@ class App:
             else:
                 for i in range(len(df)):
                     list.insert(list.size(), '    ' + df.iloc[i]['title'])
+                    self.links.append(df.iloc[i]['link'])
                 return
             for i in range(len(df)):
                 if self.sort_select.get() == self.sort_options[3]:
@@ -172,9 +173,9 @@ class App:
             button.config(state=NORMAL)
             toggle_button(button)
 
-        def open_links(listbox, indexes):
+        def open_links(indexes):
             for i in indexes:
-                webbrowser.open(listbox[i])
+                webbrowser.open(self.links[i])
 
         def toggle_sidebar(event, sidebar):
             if sidebar.winfo_manager() != 'place':
@@ -195,7 +196,7 @@ class App:
             if curr != self.product_select:
                 self.product_select = curr
             else:
-                open_links(self.links, lists.curselection())
+                open_links(lists.curselection())
 
         def on_hover(event):
             listbox = event.widget
